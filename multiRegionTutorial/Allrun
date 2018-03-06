@@ -1,0 +1,23 @@
+#!/bin/bash
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+clear
+echo -e "\n Case setup valid for openfoam v5.0"
+
+echo -e "\n Running blockMesh"
+runApplication blockMesh 
+echo -e "Running topoSet"
+runApplication topoSet
+echo -e "Running splitMesh"
+runApplication splitMeshRegions -cellZonesOnly -overwrite
+echo -e "Setting up boundary conditions"
+runApplication changeDictionary -region water
+rm log.changeDict*
+runApplication changeDictionary -region heater
+echo -e "Running solver"
+runApplication chtMultiRegionFoam
+echo -e "\n
+-------------------------------------------------------------------------------
+End Simulation"
+
